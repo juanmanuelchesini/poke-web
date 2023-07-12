@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using dominio;
+using System.Security.Cryptography;
 
 namespace negocio
 {
@@ -13,7 +14,7 @@ namespace negocio
         //aca creo los metodos de acceso a datos para los pokemon
         public List<Pokemon> Listar()
         {
-            List<Pokemon> lista = new List<Pokemon> ();
+            List<Pokemon> lista = new List<Pokemon>();
             SqlConnection conexion = new SqlConnection();
             SqlCommand comando = new SqlCommand();
             SqlDataReader lector;
@@ -30,7 +31,7 @@ namespace negocio
 
                 while (lector.Read())
                 {
-                    Pokemon aux = new Pokemon ();
+                    Pokemon aux = new Pokemon();
                     aux.Id = (int)lector["Id"];
                     aux.Numero = lector.GetInt32(0); //Dos formas de hacerlo con get y con el otro
                     aux.Nombre = (string)lector["Nombre"];
@@ -61,7 +62,7 @@ namespace negocio
 
                 return lista;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
 
                 throw ex;
@@ -118,12 +119,12 @@ namespace negocio
             }
         }
 
-        public void agregar (Pokemon nuevo)
+        public void agregar(Pokemon nuevo)
         {
-            AccesoDatos datos = new AccesoDatos ();
+            AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("insert into POKEMONS(Numero, Nombre, Descripcion, Activo, IdTipo, IdDebilidad, UrlImagen) values(1"+ nuevo.Numero + ", '"+ nuevo.Nombre +"', '"+ nuevo.Descripcion +"', 1, @idTipo, @idDebilidad, @urlImagen)");
+                datos.setearConsulta("insert into POKEMONS(Numero, Nombre, Descripcion, Activo, IdTipo, IdDebilidad, UrlImagen) values(1" + nuevo.Numero + ", '" + nuevo.Nombre + "', '" + nuevo.Descripcion + "', 1, @idTipo, @idDebilidad, @urlImagen)");
                 datos.setearParametro("@idTipo", nuevo.Tipo.Id);
                 datos.setearParametro("@idDebilidad", nuevo.Debilidad.Id);
                 datos.setearParametro("@urlImagen", nuevo.UrlImagen);
@@ -139,11 +140,36 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-        public void modificar (Pokemon poke)
+        public void agregarConSp(Pokemon nuevo)
         {
-            AccesoDatos datos = new AccesoDatos(); 
-                try
-                {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearStoreProcedure("storedAltaPokemon");
+                datos.setearParametro("@numero", nuevo.Numero);
+                datos.setearParametro("@nombre", nuevo.Nombre);
+                datos.setearParametro("@desc", nuevo.Descripcion);
+                datos.setearParametro("@img", nuevo.UrlImagen);
+                datos.setearParametro("@idTipo", nuevo.Tipo.Id);
+                datos.setearParametro("@idDebilidad", nuevo.Debilidad.Id);
+                datos.ejecutarAccion();
+                //datos.setearParametro("@idEvolucion", null);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public void modificar(Pokemon poke)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
                 datos.setearConsulta("Update POKEMONS set Numero = @numero, Nombre = @nombre, Descripcion = @descripcion, UrlImagen = @img, IdTipo = @idTipo, IdDebilidad = @idDebilidad where Id = @id");
                 datos.setearParametro("@numero", poke.Numero);
                 datos.setearParametro("@nombre", poke.Nombre);
@@ -154,18 +180,18 @@ namespace negocio
                 datos.setearParametro("@id", poke.Id);
 
                 datos.ejecutarAccion();
-                }
-                catch (Exception ex)
-                {
+            }
+            catch (Exception ex)
+            {
 
-                    throw ex;
-                }
-                finally
-                {
+                throw ex;
+            }
+            finally
+            {
                 datos.cerrarConexion();
-                }
+            }
         }
-        public void eliminar (int id)
+        public void eliminar(int id)
         {
             try
             {
@@ -178,10 +204,10 @@ namespace negocio
             {
 
                 throw ex;
-            }   
-            
+            }
+
         }
-        public void elminarLogico (int id)
+        public void elminarLogico(int id)
         {
             try
             {
@@ -205,7 +231,7 @@ namespace negocio
             try
             {
                 string consulta = "select Numero, Nombre, P.Descripcion, UrlImagen, E.Descripcion Tipo, D.Descripcion Debilidad, P.IdTipo, P.IdDebilidad, P.Id from POKEMONS P, ELEMENTOS E, ELEMENTOS D where E.Id = P.IdTipo and D.Id = P.IdDebilidad And P.Activo = 1 And ";
-                
+
                 if (campo == "Número")
                 {
                     switch (criterio)
@@ -229,13 +255,13 @@ namespace negocio
                             consulta += "Nombre like '" + filtro + "%' ";
                             break;
                         case "Termina con":
-                            consulta += "Nombre like '%" + filtro + "'" ;
+                            consulta += "Nombre like '%" + filtro + "'";
                             break;
                         default:
-                            consulta += "Nombre like '%" + filtro + "%'" ;
+                            consulta += "Nombre like '%" + filtro + "%'";
                             break;
                     }
-                } 
+                }
                 else
                 {
                     switch (criterio)
