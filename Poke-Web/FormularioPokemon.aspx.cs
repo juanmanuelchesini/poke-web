@@ -18,7 +18,8 @@ namespace Poke_Web
 
             //cargar desplegables
             try
-            {
+            {   
+                //configuracion inicial de la pantalla
                 if (!IsPostBack)
                 {
                     ElementoNegocio negocio = new ElementoNegocio();
@@ -33,6 +34,31 @@ namespace Poke_Web
                     ddlDebilidad.DataValueField = "Id";
                     ddlDebilidad.DataTextField = "Descripcion";
                     ddlDebilidad.DataBind();
+                }
+
+                //configuracion si estamos modificando.
+                string id = Request.QueryString["id"] != null ? Request.QueryString["id"].ToString() : "";
+                if (id != "" && !IsPostBack) 
+                {
+                    PokemonNegocio negocio = new PokemonNegocio();
+                    //achicamos lo de las listas
+                    //List<Pokemon> lista = negocio.Listar(id);
+                    //Pokemon seleccionado = lista[0];
+                    Pokemon seleccionado = (negocio.Listar(id))[0];
+
+                    //pre cargar todos los campos
+                    txtId.Text = id;
+                    txtNumero.Text = seleccionado.Numero.ToString();
+                    txtNombre.Text = seleccionado.Nombre;
+                    txtDescripcion.Text = seleccionado.Descripcion;
+                    txtUrlImagen.Text = seleccionado.UrlImagen;
+                    
+
+                    ddlTipo.SelectedValue = seleccionado.Tipo.Id.ToString();
+                    ddlDebilidad.SelectedValue = seleccionado.Debilidad.Id.ToString();
+                    txtUrlImagen_TextChanged(sender, e);
+
+
                 }
             }
             catch (Exception ex)
@@ -50,6 +76,7 @@ namespace Poke_Web
             try
             {
                 //crear la instancia del poke q voy a agregar
+                
                 Pokemon nuevo = new Pokemon();
                 //crear la instancia de negocio para listar
                 PokemonNegocio negocio = new PokemonNegocio();
@@ -65,7 +92,14 @@ namespace Poke_Web
                 nuevo.Debilidad = new Elemento();
                 nuevo.Debilidad.Id = int.Parse(ddlDebilidad.SelectedValue);
 
-                negocio.agregarConSp(nuevo);
+                if (Request.QueryString["id"] != null)
+                { 
+                    nuevo.Id = int.Parse(txtId.Text);
+                    negocio.modificarConSP(nuevo);
+                }
+                else
+                    negocio.agregarConSp(nuevo);
+
                 Response.Redirect("ListaPokemon.aspx", false);
             }
             catch (Exception ex)
