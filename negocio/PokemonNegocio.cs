@@ -23,7 +23,7 @@ namespace negocio
             {
                 conexion.ConnectionString = "server=DESKTOP-U06P0EN\\SQLEXPRESS; database=POKEDEX_DB; integrated security=true"; //establecer conexion
                 comando.CommandType = System.Data.CommandType.Text; //Como voy a inyectar las consultas a la db
-                comando.CommandText = "select Numero, Nombre, P.Descripcion, UrlImagen, E.Descripcion Tipo, D.Descripcion Debilidad, P.IdTipo, P.IdDebilidad, P.Id from POKEMONS P, ELEMENTOS E, ELEMENTOS D where E.Id = P.IdTipo and D.Id = P.IdDebilidad And P.Activo = 1 "; //el texto de la consulta propiamente dicho 
+                comando.CommandText = "select Numero, Nombre, P.Descripcion, UrlImagen, E.Descripcion Tipo, D.Descripcion Debilidad, P.IdTipo, P.IdDebilidad, P.Id, P.Activo from POKEMONS P, ELEMENTOS E, ELEMENTOS D where E.Id = P.IdTipo and D.Id = P.IdDebilidad "; //el texto de la consulta propiamente dicho 
                 if(id != "")
                 {
                     comando.CommandText += " and P.Id = " + id;
@@ -59,6 +59,8 @@ namespace negocio
                     aux.Debilidad = new Elemento();
                     aux.Debilidad.Id = (int)lector["IdDebilidad"];
                     aux.Debilidad.Descripcion = (string)lector["Debilidad"];
+
+                    aux.Activo = (bool)lector["Activo"];
 
                     lista.Add(aux);
                 }
@@ -111,6 +113,8 @@ namespace negocio
                     aux.Debilidad = new Elemento();
                     aux.Debilidad.Id = (int)datos.Lector["IdDebilidad"];
                     aux.Debilidad.Descripcion = (string)datos.Lector["Debilidad"];
+
+                    aux.Activo = bool.Parse(datos.Lector["Activo"].ToString());
 
                     lista.Add(aux);
                 }
@@ -239,13 +243,14 @@ namespace negocio
             }
 
         }
-        public void elminarLogico(int id)
+        public void elminarLogico(int id, bool activo = false)
         {
             try
             {
                 AccesoDatos datos = new AccesoDatos();
-                datos.setearConsulta("update POKEMONS set Activo = 0 where Id = @id");
+                datos.setearConsulta("update POKEMONS set Activo = @activo where Id = @id");
                 datos.setearParametro("@id", id);
+                datos.setearParametro("@activo", activo);
                 datos.ejecutarAccion();
 
             }

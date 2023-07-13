@@ -48,6 +48,9 @@ namespace Poke_Web
                     //Pokemon seleccionado = lista[0];
                     Pokemon seleccionado = (negocio.Listar(id))[0];
 
+                    //guardo el poke seleccionado en session
+                    Session.Add("pokeSeleccionado", seleccionado);
+
                     //pre cargar todos los campos
                     txtId.Text = id;
                     txtNumero.Text = seleccionado.Numero.ToString();
@@ -60,7 +63,10 @@ namespace Poke_Web
                     ddlDebilidad.SelectedValue = seleccionado.Debilidad.Id.ToString();
                     txtUrlImagen_TextChanged(sender, e);
 
-
+                    //configurar acciones
+                    if (!seleccionado.Activo)
+                        btnDesactivar.Text = "Activar";
+                    
                 }
             }
             catch (Exception ex)
@@ -131,6 +137,23 @@ namespace Poke_Web
                     negocio.eliminar(int.Parse(txtId.Text));
                     Response.Redirect("ListaPokemon.aspx", false);
                 }
+            }
+            catch (Exception ex)
+            {
+
+                Session.Add("error", ex);
+            }
+        }
+
+        protected void btnDesactivar_Click(object sender, EventArgs e)
+        {
+            PokemonNegocio negocio = new PokemonNegocio();
+            Pokemon seleccionado = (Pokemon)Session["pokeSeleccionado"];
+            try
+            {
+
+                negocio.elminarLogico(seleccionado.Id, !seleccionado.Activo);
+                Response.Redirect("ListaPokemon.aspx");
             }
             catch (Exception ex)
             {
