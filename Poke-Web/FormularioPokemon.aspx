@@ -1,8 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master.Master" AutoEventWireup="true" CodeBehind="FormularioPokemon.aspx.cs" Inherits="Poke_Web.FormularioPokemon" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <asp:ScriptManager runat="server" ID="scriptManager1"/>
+    <asp:ScriptManager runat="server" ID="scriptManager1" />
     <div class="row">
         <div class="col-6">
             <div class="mb-3">
@@ -34,18 +35,37 @@
             <div class="mb-3">
                 <asp:Label for="txtDescripcion" ID="lblDescripcion" runat="server" Text="Descripcion" CssClass="form-label"></asp:Label>
                 <asp:TextBox ID="txtDescripcion" TextMode="MultiLine" runat="server" CssClass="form-control"></asp:TextBox>
-            </div>            
-                <asp:UpdatePanel runat="server">
-                    <ContentTemplate>
-                        <div class="mb-3">
-                            <asp:Label for="txtUrlImagen" ID="lblUrlImagen" Text="UrlImagen" runat="server" CssClass="form-label" />
-                            <asp:TextBox OnTextChanged="txtUrlImagen_TextChanged" ID="txtUrlImagen" runat="server" 
-                                CssClass="form-control" AutoPostBack="true" />
-                        </div>
-                        <asp:Image ImageUrl="https://media.istockphoto.com/id/1128826884/vector/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment.jpg?s=612x612&w=0&k=20&c=390e76zN_TJ7HZHJpnI7jNl7UBpO3UP7hpR2meE1Qd4="
-                            runat="server" ID="imgPokemon" Width="60%" />
-                    </ContentTemplate>
-                </asp:UpdatePanel>            
+            </div>
+            <asp:UpdatePanel runat="server">
+                <ContentTemplate>
+                    <div class="mb-3">
+                        <asp:Label for="txtUrlImagen" ID="lblUrlImagen" Text="UrlImagen" runat="server" CssClass="form-label" />
+                        <asp:TextBox OnTextChanged="txtUrlImagen_TextChanged" ID="txtUrlImagen" runat="server"
+                            CssClass="form-control" AutoPostBack="true" />
+                    </div>
+                    <asp:Image ImageUrl="https://media.istockphoto.com/id/1128826884/vector/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment.jpg?s=612x612&w=0&k=20&c=390e76zN_TJ7HZHJpnI7jNl7UBpO3UP7hpR2meE1Qd4="
+                        runat="server" ID="imgPokemon" Width="60%" />
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                <ContentTemplate>
+                    <div class="mb-3">
+                        <asp:Button ID="btnEliminar" Text="Eliminar" OnClick="btnEliminar_Click1" CssClass="btn btn-danger" runat="server" />
+                    </div>
+                    <%-- inyectamos codigo c# en el front para validar q aparezca o no la confirmacion --%>
+                    <%if (ConfirmaEliminacion)
+                        { %>
+                    <div class="mb-3">
+                        <asp:CheckBox Text="Confirmar Eliminación" ID="chkConfirmarEliminacion" runat="server" />
+                        <asp:Button ID="btnConfirmaEliminar" Text="Eliminar" OnClick="btnConfirmaEliminar_Click" CssClass="btn btn-outline-danger" runat="server" />
+                    </div>
+                    <%}%>
+                </ContentTemplate>
+            </asp:UpdatePanel>
         </div>
     </div>
 </asp:Content>

@@ -11,11 +11,13 @@ namespace Poke_Web
 {
     public partial class FormularioPokemon : System.Web.UI.Page
     {
+        public bool ConfirmaEliminacion { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
             //desabilitar la carga de Id (se genera automaticamente en la db)
             txtId.Enabled = false;
-
+            //confirma eliminacion en false cuando carga la pagina
+            ConfirmaEliminacion = false;
             //cargar desplegables
             try
             {   
@@ -113,6 +115,28 @@ namespace Poke_Web
         {
             imgPokemon.ImageUrl = txtUrlImagen.Text;
             
+        }
+        protected void btnEliminar_Click1(object sender, EventArgs e)
+        {
+            ConfirmaEliminacion = true;
+        }
+
+        protected void btnConfirmaEliminar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(chkConfirmarEliminacion.Checked)
+                {
+                    PokemonNegocio negocio = new PokemonNegocio();
+                    negocio.eliminar(int.Parse(txtId.Text));
+                    Response.Redirect("ListaPokemon.aspx", false);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Session.Add("error", ex);
+            }
         }
     }
 }
