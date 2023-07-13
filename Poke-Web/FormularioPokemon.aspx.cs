@@ -46,7 +46,7 @@ namespace Poke_Web
                     //achicamos lo de las listas
                     //List<Pokemon> lista = negocio.Listar(id);
                     //Pokemon seleccionado = lista[0];
-                    Pokemon seleccionado = (negocio.Listar(id))[0];
+                    Pokemon seleccionado = negocio.Listar(id)[0];
 
                     //guardo el poke seleccionado en session
                     Session.Add("pokeSeleccionado", seleccionado);
