@@ -11,7 +11,7 @@ namespace Poke_Web
 {
 
 
-    public partial class Registro
+    public partial class Login
     {
 
         /// <summary>

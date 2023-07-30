@@ -35,7 +35,7 @@
                     </ul>
                 </div>
                 <div>
-                    <a href="Registro.aspx" class="btn btn-primary">Login</a>
+                    <a href="Login.aspx" class="btn btn-primary">Login</a>
                     <a href="Registro.aspx" class="btn btn-secondary">Registrarse</a>
                     <img src="..." class="figure-img img-fluid rounded" alt="...">
             </div>
