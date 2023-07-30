@@ -3,4 +3,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h2>Mi Perfil</h2>
+    <div class="row">
+
+    </div>
+    
 </asp:Content>

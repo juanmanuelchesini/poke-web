@@ -25,7 +25,8 @@ namespace Poke_Web
                 EmailService emailService = new EmailService();
                 user.Email = txtEmail.Text;
                 user.Pass = txtPassword.Text;
-                int id = traineeNegocio.insertarNuevo(user);
+                user.Id = traineeNegocio.insertarNuevo(user);
+                Session.Add("trainee", user);
 
                 emailService.armarCorreo(user.Email, "Bienvenido Trainee", "Hola, te damos la bienvenida a la Aplicación Pokemon");
                 emailService.enviarEmail();

@@ -35,10 +35,20 @@
                     </ul>
                 </div>
                 <div>
+                    <%-- Validar si estamos o no en session y que aparezca el btn salir --%>
+                    <%if (!negocio.Seguridad.sesionActiva(Session["trainee"]))
+                        {%>
                     <a href="Login.aspx" class="btn btn-primary">Login</a>
                     <a href="Registro.aspx" class="btn btn-secondary">Registrarse</a>
                     <img src="..." class="figure-img img-fluid rounded" alt="...">
-            </div>
+                    <% }
+                        else
+                        { %>
+                    <asp:Button ID="btnSalir" CssClass="btn btn-primary" runat="server"
+                        Text="Salir" OnClick="btnSalir_Click" />
+                    <img src="..." class="figure-img img-fluid rounded" alt="...">
+                    <% }%>
+                </div>
         </nav>
         <div class="container">
             <hr />
